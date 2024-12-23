@@ -1,0 +1,15 @@
+<div class="content-container">
+  <div class="content-list">
+    @for (message of mockChat; track message) {
+    <div class="post">
+      <div class="post-content">
+        <p class="post-owner">
+          {{message.sentBy}}
+          <small>{{message.timestamp}}</small>
+        </p>
+        <p class="post-text">{{message.message}}</p>
+      </div>
+    </div>
+    }
+  </div>
+</div>
