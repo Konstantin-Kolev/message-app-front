@@ -11,9 +11,23 @@
 }
 
 @layer components {
+  html, body, app-root {
+    display: block;
+    height: 100vh;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+
+  .layout {
+    height: 100vh;
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+
   .content-container {
     @apply flex flex-col 
-    bg-gray-300 dark:bg-gray-700
+    bg-gray-300
     m-0 
     h-full w-full 
     overflow-hidden;
@@ -24,6 +38,20 @@
     h-full w-full 
     mt-0 ml-0 mx-auto px-0 pb-12 
     overflow-y-scroll;
+  }
+
+  .header {
+    @apply flex flex-row items-center justify-evenly 
+    bg-gray-300
+    w-full h-16 
+    m-0 
+    shadow-lg;
+  }
+
+  .header-title {
+    @apply text-xl text-gray-500 tracking-wider font-semibold text-opacity-80 
+    mr-auto ml-2 my-auto 
+    transition duration-300 ease-in-out;
   }
   
   .post {
@@ -40,11 +68,42 @@
   }
 
   .post-text {
-    @apply text-lg text-left text-gray-800 
+    @apply text-lg text-left text-gray-800 w-full
     mr-auto whitespace-normal;
   }
 
   .post-owner {
     @apply text-left font-semibold text-gray-800 mr-2 cursor-pointer;
+  }
+
+  .channel-list {
+    @apply w-80 h-auto m-0 bg-gray-200
+    overflow-hidden;
+  }
+
+  .channel-header {
+    @apply flex items-center justify-center 
+    h-16 
+    m-0 p-0;
+  }
+
+  .channel-header-text {
+    @apply text-lg tracking-wider font-bold 
+    text-gray-600
+    mr-auto ml-4 my-auto align-middle;
+  }
+
+  .channel-selection {
+    @apply flex flex-row items-center justify-evenly
+    mt-1 mr-auto ml-2
+    transition duration-300 ease-in-out
+    cursor-pointer;
+  }
+
+  .channel-selection-text {
+    @apply text-gray-500 font-semibold tracking-wide
+    mr-auto 
+    transition duration-300 ease-in-out 
+    cursor-pointer;
   }
 }
