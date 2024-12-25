@@ -9,4 +9,5 @@ import { Component } from '@angular/core';
 })
 export class ChannelListComponent {
 
+  public channelList: string[] = ['some chat', 'super channel', 'talking abbout whatever']
 }

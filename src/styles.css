@@ -53,6 +53,14 @@
     mr-auto ml-2 my-auto 
     transition duration-300 ease-in-out;
   }
+
+  .header-icon {
+    @apply text-gray-500
+    mr-8 ml-4
+    transition duration-300 ease-in-out 
+    hover:text-green-700
+    cursor-pointer;
+  }
   
   .post {
     @apply w-full
