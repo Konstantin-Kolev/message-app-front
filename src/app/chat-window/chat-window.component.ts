@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { ChatMessage } from '../models/chat-message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenToSquare, faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash, faUserTie } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-chat-window',
@@ -14,6 +14,7 @@ export class ChatWindowComponent {
 
   editIcon = faPenToSquare;
   deleteIcon = faTrash;
+  adminIcon = faUserTie;
 
   public mockChat: ChatMessage[] = [
     {

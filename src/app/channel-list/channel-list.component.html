@@ -2,9 +2,8 @@
   <h5 class='channel-header-text'>Channels</h5>
 </div>
 <div class='channel-container'>
-  @for (channel of channelList; track channel) {
-    <div class="channel-selection">
-      <h6 class="channel-selection-text">{{channel}}</h6>
-    </div>
-  }
+  <!-- <div channel-dropdown class="dropdown" [header]='channelsHeader' [contentList]="channelList"></div> -->
+  <!-- <div channel-dropdown class="dropdown" [header]="chatsHeader" [contentList]="chatsList"></div> -->
+  <channel-dropdown [header]='channelsHeader' [contentList]="channelList" />
+  <channel-dropdown [header]="chatsHeader" [contentList]="chatsList"/>
 </div>
