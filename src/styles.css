@@ -146,6 +146,15 @@
     @apply text-gray-500 font-semibold tracking-wide
     mr-auto 
     transition duration-300 ease-in-out 
+    hover:text-green-500
     cursor-pointer;
   }
+}
+
+::-webkit-scrollbar {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-500;
 }
