@@ -1,0 +1,25 @@
+<div class="content-container">
+  <div class="header">
+    <h3 class="header-title">Your chat</h3>
+    <fa-icon [icon]="addUserIcon" class="header-icon"></fa-icon>
+    <fa-icon [icon]="adminIcon" class="header-icon"></fa-icon>
+    <fa-icon [icon]="editIcon" class="header-icon"></fa-icon>
+    <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-600"></fa-icon>
+  </div>
+  <div class="content-list">
+    @for (message of mockChat; track message) {
+    <div class="post">
+      <div class="post-content">
+        <p class="post-owner">
+          {{message.sentBy}}
+          <small>{{message.timestamp}}</small>
+        </p>
+        <p class="post-text">{{message.message}}</p>
+      </div>
+    </div>
+    }
+  </div>
+  <div class="message-input-element">
+    <input type="text" placeholder="Enter message..." class="message-input"/>
+  </div>
+</div>

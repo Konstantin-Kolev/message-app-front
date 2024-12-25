@@ -1,0 +1,17 @@
+<div class="dropdown">
+  <div (click)="headerOnClick()" class="dropdown-header">
+    @if(expanded) {
+      <fa-icon [icon]="downChevron" class="text-accent text-opacity-80 my-auto mr-1"></fa-icon>
+    } @else {
+      <fa-icon [icon]="rightChevron" class="text-accent text-opacity-80 my-auto mr-1"></fa-icon>
+    }
+    <h5 class="dropdown-header-text">{{header}}</h5>
+  </div>
+  @if(expanded){
+    @for (element of contentList; track element) {
+      <div class="channel-selection">
+        <h6 class="channel-selection-text">{{element}}</h6>
+      </div>
+    }
+  }
+</div>
