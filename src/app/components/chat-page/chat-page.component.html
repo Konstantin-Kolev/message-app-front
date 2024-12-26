@@ -1,4 +1,11 @@
-<div class="layout">
-  <!-- <app-channel-list/> -->
-  <app-chat-window/>
-</div>
+@if (user$|async) { 
+  <div class="layout">
+    <side-bar/>
+    <div app-channel-list class="channel-list"></div>
+    <app-chat-window/>
+  </div>
+} @else {
+  <!-- <h1 (click)="loginClick()">No user logged in!</h1> -->
+   <!-- <login-form/> -->
+   <register-form/>
+}
