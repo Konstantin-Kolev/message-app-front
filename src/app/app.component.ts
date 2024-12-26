@@ -18,17 +18,4 @@ import { RegisterFormComponent } from "./components/authentication/register-form
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-
-  user$: Observable<User | null>;
-  constructor(private userStateService: UserStateService) {
-    this.user$ = this.userStateService.user$;
-  }
-
-  public loginClick() {
-    this.userStateService.setUser({
-      id: 1,
-      username: 'user1',
-      email: 'some@mail.com'
-    });
-  }
 }

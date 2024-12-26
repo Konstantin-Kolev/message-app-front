@@ -1,5 +1,11 @@
 <div class="side-bar-container">
   <div class="sidebar-icon group">
+    <fa-icon [icon]="userIcon"></fa-icon>
+    <span class="sidebar-tooltip group-hover:scale-100">
+      {{userStateService.getCurrentUser()()?.username}}
+    </span>
+  </div>
+  <div class="sidebar-icon group">
     <fa-icon [icon]="addUserIcon"></fa-icon>
     <span class="sidebar-tooltip group-hover:scale-100">
       Add friend

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { User } from '../models/user.model';
 
@@ -7,18 +7,17 @@ import { User } from '../models/user.model';
 })
 export class UserStateService {
 
-  private userSubject = new BehaviorSubject<User | null>(null);
-  user$ = this.userSubject.asObservable();
+  private user = signal<User | null>(null);
 
   setUser(user: User) {
-    this.userSubject.next(user);
+    this.user.set(user);
   }
 
   clearUser() {
-    this.userSubject.next(null);
+    this.user.set(null);
   }
 
   getCurrentUser() {
-    return this.userSubject.getValue();
+    return this.user;
   }
 }
