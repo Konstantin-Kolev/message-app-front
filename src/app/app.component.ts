@@ -7,11 +7,12 @@ import { Observable } from 'rxjs';
 import { User } from './models/user.model';
 import { UserStateService } from './services/user-state.service';
 import { CommonModule } from '@angular/common';
+import { LoginFormComponent } from "./login-form/login-form.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, ChannelListComponent, ChatWindowComponent, SideBarComponent, CommonModule],
+  imports: [RouterOutlet, ChannelListComponent, ChatWindowComponent, SideBarComponent, CommonModule, LoginFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
