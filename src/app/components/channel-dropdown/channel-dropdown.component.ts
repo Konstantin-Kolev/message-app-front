@@ -1,6 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
+import { ChannelType } from '../../models/channel.model';
 
 @Component({
   selector: 'channel-dropdown',
@@ -15,7 +16,7 @@ export class ChannelDropdownComponent {
   public header: string = '';
 
   @Input()
-  public contentList: string[] = [];
+  public contentList: ChannelType[] = [];
 
   public expanded: boolean = false;
   rightChevron = faChevronRight;

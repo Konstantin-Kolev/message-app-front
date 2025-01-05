@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserStateService } from '../../../services/user-state.service';
 import { UserApiService } from '../../../services/user-api.service';
-import { User } from '../../../models/user.model';
+import { UserType } from '../../../models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -20,7 +20,7 @@ export class LoginFormComponent {
 
   email: string = '';
   password: string = '';
-  user: User | undefined = undefined;
+  user: UserType | undefined = undefined;
 
   onSubmit() {
     this.user = this.userApiService.login(this.email, this.password);

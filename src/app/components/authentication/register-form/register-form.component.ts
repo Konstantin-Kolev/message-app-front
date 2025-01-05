@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/user.model';
+import { UserType } from '../../../models/user.model';
 import { UserApiService } from '../../../services/user-api.service';
 import { UserStateService } from '../../../services/user-state.service';
 import { Router } from '@angular/router';
@@ -22,7 +22,8 @@ export class RegisterFormComponent {
   email: string = '';
   password: string = '';
   passwordConfirm: string = '';
-  user: User = {
+  user: UserType = {
+    id: 0,
     email: '',
     password: '',
     username: ''
