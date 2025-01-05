@@ -1,0 +1,33 @@
+<section class="bg-gray-50">
+  <div class="login-container">
+      <div class="login-element">
+          <div class="login-header">
+              <h1 class="login-header-text">
+                  Create an account
+              </h1>
+              <form class="login-form" (ngSubmit)="onSubmit()">
+                  <div>
+                      <label for="email" class="login-form-label">Email</label>
+                      <input type="email" name="email" id="email" [(ngModel)]="email" class="login-form-input" placeholder="your@mail.com" required="">
+                  </div>
+                  <div>
+                    <label for="username" class="login-form-label">Username</label>
+                    <input type="text" name="username" id="username" [(ngModel)]="username" class="login-form-input" placeholder="Username" required="">
+                </div>
+                  <div>
+                      <label for="password" class="login-form-label">Password</label>
+                      <input type="password" name="password" id="password" [(ngModel)]="password" placeholder="••••••••" class="login-form-input" required="">
+                  </div>
+                  <div>
+                      <label for="confirm-password" class="login-form-label">Confirm password</label>
+                      <input type="confirm-password" name="confirm-password" id="confirm-password" [(ngModel)]="passwordConfirm" placeholder="••••••••" class="login-form-input" required="">
+                  </div>
+                  <button type="submit" class="login-submit-button">Create an account</button>
+                  <p class="text-sm font-light text-gray-500">
+                      Already have an account? <a href="/login" class="font-medium text-green-600 hover:underline ">Login here</a>
+                  </p>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>

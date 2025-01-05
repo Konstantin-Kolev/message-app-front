@@ -1,0 +1,25 @@
+<section class="bg-gray-50">
+  <div class="login-container">
+      <div class="login-element">
+          <div class="login-header">
+              <h1 class="login-header-text">
+                  Sign in to your account
+              </h1>
+              <form class="login-form" (submit)="onSubmit()">
+                  <div>
+                      <label for="email" class="login-form-label">Email</label>
+                      <input type="email" name="email" class="login-form-input" placeholder="your@mail.com" [(ngModel)]="email">
+                  </div>
+                  <div>
+                      <label for="password" class="login-form-label">Password</label>
+                      <input type="password" name="password" class="login-form-input" placeholder="••••••••" [(ngModel)]="password">
+                  </div>
+                  <button type="submit" class="login-submit-button">Sign in</button>
+                  <p class="text-sm font-light text-gray-500">
+                      Don't have an account yet? <a href="/register" class="font-medium text-green-600 hover:underline">Sign up</a>
+                  </p>
+              </form>
+          </div>
+      </div>
+  </div>
+</section>

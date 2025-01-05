@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ChatMessage } from '../models/chat-message.model';
+import { ChatMessage } from '../../models/chat-message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faTrash, faUserPlus, faUserTie } from '@fortawesome/free-solid-svg-icons';
 
