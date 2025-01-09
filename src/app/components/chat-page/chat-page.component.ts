@@ -5,6 +5,7 @@ import { UserStateService } from '../../services/user-state.service';
 import { CommonModule } from '@angular/common';
 import { SideBarComponent } from "../../side-bar/side-bar.component";
 import { LoginFormComponent } from "../authentication/login-form/login-form.component";
+import { ChannelType } from '../../models/channel.model';
 
 @Component({
   selector: 'app-chat-page',
@@ -16,5 +17,11 @@ import { LoginFormComponent } from "../authentication/login-form/login-form.comp
 export class ChatPageComponent {
 
   constructor(public userStateService: UserStateService) {
+  }
+
+  public selectedChannel: ChannelType | null = null;
+
+  public handleChannelSelect(element: ChannelType) {
+    this.selectedChannel = { ...element };
   }
 }

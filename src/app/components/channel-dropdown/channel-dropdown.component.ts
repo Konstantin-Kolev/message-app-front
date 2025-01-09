@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faChevronDown, faChevronRight } from '@fortawesome/free-solid-svg-icons';
 import { ChannelType } from '../../models/channel.model';
@@ -25,5 +25,8 @@ export class ChannelDropdownComponent {
   public headerOnClick() {
     this.expanded = !this.expanded;
   }
+
+  @Output()
+  public onChannelSelect = new EventEmitter();
 
 }
