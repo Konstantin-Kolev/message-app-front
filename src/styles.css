@@ -172,6 +172,65 @@
     hover:text-green-500
     cursor-pointer;
   }
+
+  .modal-container {
+    @apply overflow-y-auto overflow-x-hidden 
+    fixed top-0 right-0 left-0 z-50
+    justify-center items-center w-full 
+    md:inset-0 md:h-full
+  }
+
+  .modal-content-layout {
+    @apply relative p-4 w-full 
+    ml-12 mt-28
+    max-w-2xl h-full md:h-auto
+  }
+
+  .modal-content {
+    @apply relative p-4 bg-white rounded-lg shadow sm:p-5
+  }
+
+  .modal-header-container {
+    @apply flex justify-between items-center 
+    pb-4 mb-4 rounded-t border-b 
+    sm:mb-5
+  }
+
+  .modal-header-text {
+    @apply text-lg font-semibold 
+    text-gray-900
+  }
+
+  .modal-header-button {
+    @apply text-gray-400 bg-transparent 
+    hover:bg-gray-200 hover:text-gray-900 
+    rounded-lg text-sm p-1.5 ml-auto 
+    inline-flex items-center
+  }
+
+  .modal-form-container {
+    @apply grid gap-4 
+    mb-4 sm:grid-cols-2
+  }
+
+  .modal-form-label {
+    @apply block mb-2 text-sm 
+    font-medium text-gray-900
+  }
+
+  .modal-form-input {
+    @apply bg-gray-50 border border-gray-300 
+    text-gray-900 text-sm rounded-lg 
+    focus:ring-green-600 focus:border-green-600 
+    block w-full p-2.5
+  }
+
+  .modal-form-button {
+    @apply text-white inline-flex items-center 
+    bg-green-700 hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 
+    font-medium rounded-lg 
+    text-sm px-5 py-2.5 text-center
+  }
 }
 
 ::-webkit-scrollbar {

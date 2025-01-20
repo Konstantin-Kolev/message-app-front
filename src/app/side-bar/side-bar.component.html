@@ -11,7 +11,7 @@
       Add friend
     </span>
   </div>
-  <div class="sidebar-icon group">
+  <div class="sidebar-icon group" (click)="onChannelCreate.emit()">
     <fa-icon [icon]="plusIcon"></fa-icon>
     <span class="sidebar-tooltip group-hover:scale-100">
       Create channel

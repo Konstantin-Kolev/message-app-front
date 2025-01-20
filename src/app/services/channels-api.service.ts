@@ -69,6 +69,7 @@ export class ChannelsApiService {
   public createChannel(channel: ChannelType) {
     channel.id = this.channelsList.length + 1;
     this.channelsList.push(channel);
+    console.log(this.channelsList);
     return channel;
   }
 

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserStateService } from '../../../services/user-state.service';
 import { UserApiService } from '../../../services/user-api.service';
@@ -22,10 +22,14 @@ export class LoginFormComponent {
   password: string = '';
   user: UserType | undefined = undefined;
 
+  @Output()
+  public onSuccessfulLogin = new EventEmitter();
+
   onSubmit() {
     this.user = this.userApiService.login(this.email, this.password);
     if (this.user) {
       this.userStateService.setUser(this.user);
+      this.onSuccessfulLogin.emit();
       this.router.navigateByUrl('');
     }
   }
