@@ -2,10 +2,14 @@
   <div class="content-container">
     <div class="header">
       <h3 class="header-title">{{selectedChannel.channelName}}</h3>
-      <fa-icon [icon]="addUserIcon" class="header-icon"></fa-icon>
-      <fa-icon [icon]="adminIcon" class="header-icon"></fa-icon>
-      <fa-icon [icon]="editIcon" class="header-icon"></fa-icon>
-      <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-600"></fa-icon>
+      @if(currentUser && selectedChannel.adminIds.includes(currentUser.id!)) {
+        <fa-icon [icon]="addUserIcon" class="header-icon"></fa-icon>
+        <fa-icon [icon]="adminIcon" class="header-icon"></fa-icon>
+        <fa-icon [icon]="editIcon" class="header-icon"></fa-icon>
+      }
+      @if(currentUser && selectedChannel.ownerId === currentUser.id) {
+        <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-600"></fa-icon>
+      }
     </div>
     <div class="content-list">
       @for (message of channelMessages; track message) {

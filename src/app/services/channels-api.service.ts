@@ -59,12 +59,11 @@ export class ChannelsApiService {
   ];
 
   private modifyFriendChatName(channel: ChannelType, user: UserType) {
-    var modified =channel.channelName.replace(user.username, '');
-    modified = modified.replace('|', '');
+    var modified = { ...channel };
+    modified.channelName = modified.channelName.replace(user.username, '');
+    modified.channelName = modified.channelName.replace('|', '');
 
-    channel.channelName = modified;
-
-    return channel;
+    return modified;
   }
 
   public createChannel(channel: ChannelType) {
