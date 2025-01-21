@@ -18,19 +18,25 @@ export class LoginFormComponent {
     private userApiService: UserApiService,
     private router: Router) { }
 
-  email: string = '';
-  password: string = '';
+  login = {
+    email: '',
+    password: ''
+  }
   user: UserType | undefined = undefined;
+
+  loginFailed: boolean = false;
 
   @Output()
   public onSuccessfulLogin = new EventEmitter();
 
-  onSubmit() {
-    this.user = this.userApiService.login(this.email, this.password);
+  onSubmit(): void {
+    this.user = this.userApiService.login(this.login.email, this.login.password);
     if (this.user) {
       this.userStateService.setUser(this.user);
       this.onSuccessfulLogin.emit();
       this.router.navigateByUrl('');
+    } else {
+      this.loginFailed = true;
     }
   }
 }

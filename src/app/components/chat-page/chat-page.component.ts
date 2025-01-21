@@ -39,7 +39,6 @@ export class ChatPageComponent implements OnInit {
   private loadChannels(): void {
     var allChannels: ChannelType[];
     var currentUser = this.userStateService.getCurrentUser()();
-    console.log(currentUser);
     if (currentUser) {
       allChannels = this.channelsApiService.getChannelsForUser(currentUser);
       this.channelList = allChannels.filter((channel) => channel.channelType === 'group');
