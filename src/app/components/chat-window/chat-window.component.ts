@@ -6,11 +6,12 @@ import { ChannelType } from '../../models/channel.model';
 import { MessagesApiService } from '../../services/messages-api.service';
 import { UserStateService } from '../../services/user-state.service';
 import { UserType } from '../../models/user.model';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-window',
   standalone: true,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, FormsModule],
   templateUrl: './chat-window.component.html',
   styleUrl: './chat-window.component.css'
 })
@@ -21,7 +22,7 @@ export class ChatWindowComponent implements OnChanges {
   }
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['selectedChannel'].currentValue) {
-      this.channelMessages = this.messagesApi.getMessagesForChannel(changes['selectedChannel'].currentValue);
+      this.loadMessagesForChannel(changes['selectedChannel'].currentValue);
     }
   }
 
@@ -35,6 +36,25 @@ export class ChatWindowComponent implements OnChanges {
 
   public channelMessages: MessageType[] = [];
   public currentUser: UserType | null;
+  public currentMessage: string = '';
 
+  private loadMessagesForChannel(channel: ChannelType): void {
+    this.channelMessages = this.messagesApi.getMessagesForChannel(channel);
+  }
 
+  public handleMessageSubmit(): void {
+    var currentUser = this.userStateService.getCurrentUser()();
+    if (this.currentMessage !== '' && this.selectedChannel?.id && currentUser && currentUser.id) {
+      this.messagesApi.createMessage({
+        channelId: this.selectedChannel.id,
+        sentBy: currentUser.username,
+        senderId: currentUser.id,
+        message: this.currentMessage,
+        timestamp: new Date().toLocaleString('en-GB')
+      });
+
+      this.loadMessagesForChannel(this.selectedChannel);
+      this.currentMessage = '';
+    };
+  }
 }

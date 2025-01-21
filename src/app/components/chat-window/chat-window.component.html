@@ -25,7 +25,7 @@
       }
     </div>
     <div class="message-input-element">
-      <input type="text" placeholder="Enter message..." class="message-input"/>
+      <input type="text" placeholder="Enter message..." class="message-input" [(ngModel)]="currentMessage" (keyup.enter)="handleMessageSubmit()"/>
     </div>
   </div>
 } @else {
