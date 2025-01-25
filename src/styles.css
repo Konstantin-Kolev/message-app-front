@@ -147,12 +147,12 @@
 
   .dropdown-header {
     @apply flex flex-row items-center justify-evenly
-    mx-0 text-gray-500
+    mx-0 text-gray-900
     cursor-pointer;
   }
 
   .dropdown-header-text {
-    @apply text-gray-500  text-opacity-90 
+    @apply text-gray-900  text-opacity-90 
     text-lg font-semibold
     mr-auto
     cursor-default;
@@ -234,7 +234,13 @@
   }
 
   .header-dropdown {
-    @apply z-10 bg-white rounded-lg shadow w-60 fixed right-16 top-16
+    @apply z-10 bg-white rounded-lg shadow w-60 fixed top-16
+  }
+
+  .header-dropdown-title {
+    @apply text-gray-900
+    text-lg font-semibold text-center
+    cursor-default;
   }
 
   .header-dropdown-input {

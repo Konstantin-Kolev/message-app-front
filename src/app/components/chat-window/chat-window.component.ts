@@ -53,13 +53,16 @@ export class ChatWindowComponent implements OnChanges {
   public currentUser: UserType | null;
   public currentMessage: string = '';
 
-  public isAddAdminVisible: boolean = false;
-  public isAddUserVisible: boolean = false;
-  public isUserListVisible: boolean = false;
-  public isAdminListVisible: boolean = false;
-  public userSearch: string = '';
+  public dropdownState: { [key: string]: boolean } = {
+    isAddAdminVisible: false,
+    isAddUserVisible: false,
+    isUserListVisible: false,
+    isAdminListVisible: false,
+    isRenameVisible: false,
+    isDeleteVisible: false
+  }
 
-  public isRenameVisible: boolean = false;
+  public userSearch: string = '';
   public newName: string = '';
 
   private loadMessagesForChannel(channel: ChannelType): void {
@@ -78,8 +81,16 @@ export class ChatWindowComponent implements OnChanges {
     this.channelAdmins = this.userApiService.getChannelAdmins(channel);
   }
 
+  private toggleDropown(dropdownStateField: string): void {
+    const toggleValue = !this.dropdownState[dropdownStateField];
+    for(const k in this.dropdownState) {
+      this.dropdownState[k] = false;
+    }
+    this.dropdownState[dropdownStateField] = toggleValue;
+  }
+
   public toggleAddAdmin(): void {
-    this.isAddAdminVisible = !this.isAddAdminVisible;
+    this.toggleDropown('isAddAdminVisible');
     this.userSearch = '';
   }
 
@@ -92,7 +103,7 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public toggleAdminList(): void {
-    this.isAdminListVisible = !this.isAdminListVisible;
+    this.toggleDropown('isAdminListVisible');
     this.userSearch = '';
   }
 
@@ -105,7 +116,7 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public toggleRenameForm(): void {
-    this.isRenameVisible = !this.isRenameVisible;
+    this.toggleDropown('isRenameVisible');
     this.newName = '';
   }
 
@@ -118,7 +129,7 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public toggleAddUser(): void {
-    this.isAddUserVisible = !this.isAddUserVisible;
+    this.toggleDropown('isAddUserVisible');
     this.userSearch = '';
   }
 
@@ -132,7 +143,7 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public toggleUsersList(): void {
-    this.isUserListVisible = !this.isUserListVisible;
+    this.toggleDropown('isUserListVisible');
     this.userSearch = '';
   }
 
@@ -143,6 +154,16 @@ export class ChatWindowComponent implements OnChanges {
       this.loadPossibleUsers(this.selectedChannel);
       this.loadAdminInformation(this.selectedChannel);
       this.toggleUsersList();
+    }
+  }
+
+  public toggleDelete(): void {
+    this.toggleDropown('isDeleteVisible');
+  }
+
+  public handleChannelDelete(): void {
+    if (this.selectedChannel && this.selectedChannel.id) {
+      this.channelsApiService.removeChannel(this.selectedChannel.id);
     }
   }
 

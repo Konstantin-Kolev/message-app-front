@@ -10,10 +10,14 @@
       @if(currentUser && selectedChannel.ownerId === currentUser.id) {
         <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAddAdmin()"></fa-icon>
         <fa-icon [icon]="userMinusIcon" class="header-icon" (click)="toggleAdminList()"></fa-icon>
-        <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-600"></fa-icon>
+        <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-700" (click)="toggleDelete()"></fa-icon>
       }
     </div>
-    <div [class.hidden]="!isAddUserVisible" class="header-dropdown">
+    <!-- Add user dropdown  -->
+    <div [class.hidden]="!dropdownState['isAddUserVisible']" class="header-dropdown right-36">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Add user to channel</h4>
+      </div>
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
       </div>
@@ -27,7 +31,11 @@
         }
       </ul>
     </div>
-    <div [class.hidden]="!isUserListVisible" class="header-dropdown">
+    <!-- Remove user dropown -->
+    <div [class.hidden]="!dropdownState['isUserListVisible']" class="header-dropdown right-20">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Channel Members</h4>
+      </div>
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
       </div>
@@ -35,13 +43,17 @@
         @for (user of channelMembers | userFilter: userSearch; track user) {
           <li>
             <div class="user-dropdown-list-item" (click)="handleRemoveUser(user)">
-              <p class="user-dropdown-list-item-text hover:text-red-600">{{user.username}}</p>
+              <p class="user-dropdown-list-item-text hover:text-red-700">{{user.username}}</p>
             </div>
           </li>
         }
       </ul>
     </div>
-    <div [class.hidden]="!isAddAdminVisible" class="header-dropdown">
+    <!-- Add admin dropdown -->
+    <div [class.hidden]="!dropdownState['isAddAdminVisible']" class="header-dropdown right-36">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Make an Admin</h4>
+      </div>
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
       </div>
@@ -55,7 +67,11 @@
         }
       </ul>
     </div>
-    <div [class.hidden]="!isAdminListVisible" class="header-dropdown">
+    <!-- Remove admin dropdown -->
+    <div [class.hidden]="!dropdownState['isAdminListVisible']" class="header-dropdown right-20">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Remove Admin</h4>
+      </div>
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
       </div>
@@ -69,26 +85,26 @@
         }
       </ul>
     </div>
-    <div [class.hidden]="!isUserListVisible" class="header-dropdown">
-      <div class="p-3">
-        <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+    <!-- Rename dropdown -->
+    <div [class.hidden]="!dropdownState['isRenameVisible']" class="header-dropdown right-4">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Rename channel</h4>
       </div>
-      <ul class="user-dropdown-list">
-        @for (user of channelMembers | userFilter: userSearch; track user) {
-          <li>
-            <div class="user-dropdown-list-item" (click)="handleRemoveUser(user)">
-              <p class="user-dropdown-list-item-text hover:text-red-600">{{user.username}}</p>
-            </div>
-          </li>
-        }
-      </ul>
-    </div>
-    <div [class.hidden]="!isRenameVisible" class="header-dropdown">
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Rename channel" [(ngModel)]="newName">
       </div>
       <div class="p-3">
         <button type="submit" class="modal-form-button" (click)="handleChannelRename()">Rename</button>
+      </div>
+      
+    </div>
+    <!-- Delete dropdown -->
+    <div [class.hidden]="!dropdownState['isDeleteVisible']" class="header-dropdown right-0">
+      <div class="px-4 pt-4">
+        <h4 class="header-dropdown-title">Delete channel</h4>
+      </div>
+      <div class="p-3">
+        <button type="submit" class="modal-form-button bg-red-700 hover:bg-red-800" (click)="handleChannelDelete()">Delete channel</button>
       </div>
       
     </div>

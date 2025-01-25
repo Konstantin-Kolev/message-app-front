@@ -72,6 +72,10 @@ export class ChannelsApiService {
     return channel;
   }
 
+  public removeChannel(channelId: number) {
+    this.channelsList = this.channelsList.filter((channel) => channel.id !== channelId);
+  }
+
   public renameChannel(channelId: number, newName: string) {
     this.channelsList.map((channel) => {
       if (channel.id === channelId) {
