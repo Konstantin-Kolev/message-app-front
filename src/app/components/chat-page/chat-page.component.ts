@@ -50,6 +50,11 @@ export class ChatPageComponent implements OnInit {
     this.loadChannels();
   }
 
+  public handleChannelDelete() {
+    this.selectedChannel = null;
+    this.loadChannels();
+  }
+
   public handleChannelSelect(element: ChannelType) {
     this.selectedChannel = { ...element };
   }

@@ -3,7 +3,7 @@
         <side-bar (onChannelCreate)="toggleChannelCreateModal()" />
         <div app-channel-list class="channel-list" [channelList]="channelList" [chatsList]="chatsList"
             (onChannelSelect)="handleChannelSelect($event)"></div>
-        <app-chat-window [selectedChannel]="this.selectedChannel" />
+        <app-chat-window [selectedChannel]="this.selectedChannel" (onChannelDelete)="handleChannelDelete()" />
     </div>
     <div id="channelCreateModal" tabindex="-1" aria-hidden="true" [class.hidden]="!isCreateChannelVisible"
         class="modal-container">

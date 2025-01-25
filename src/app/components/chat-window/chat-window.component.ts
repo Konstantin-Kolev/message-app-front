@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
 import { MessageType } from '../../models/message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faTrash, faUserMinus, faUserPlus, faUsers, faUserTie, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -37,6 +37,9 @@ export class ChatWindowComponent implements OnChanges {
 
   @Input()
   public selectedChannel: ChannelType | null = null;
+
+  @Output()
+  public onChannelDelete = new EventEmitter();
 
   editIcon = faPenToSquare;
   deleteIcon = faTrash;
@@ -164,6 +167,7 @@ export class ChatWindowComponent implements OnChanges {
   public handleChannelDelete(): void {
     if (this.selectedChannel && this.selectedChannel.id) {
       this.channelsApiService.removeChannel(this.selectedChannel.id);
+      this.onChannelDelete.emit();
     }
   }
 
