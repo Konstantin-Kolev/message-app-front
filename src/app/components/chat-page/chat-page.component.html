@@ -1,39 +1,41 @@
 @if (userStateService.getCurrentUser()()) {
     <div class="layout">
-        <side-bar (onChannelCreate)="toggleChannelCreateModal()" />
+        <side-bar (onChannelCreate)="toggleChannelCreate()" (onAddFriend)="toggleAddFriend()" />
         <div app-channel-list class="channel-list" [channelList]="channelList" [chatsList]="chatsList"
             (onChannelSelect)="handleChannelSelect($event)"></div>
         <app-chat-window [selectedChannel]="this.selectedChannel" (onChannelDelete)="handleChannelDelete()" />
     </div>
-    <div id="channelCreateModal" tabindex="-1" aria-hidden="true" [class.hidden]="!isCreateChannelVisible"
-        class="modal-container">
-        <div class="modal-content-layout">
-            <!-- Modal content -->
-            <div class="modal-content">
-                <!-- Modal header -->
-                <div class="modal-header-container">
-                    <h3 class="modal-header-text">
-                        Create New Channel
-                    </h3>
-                    <button type="button" class="modal-header-button" (click)="toggleChannelCreateModal()">
-                        <fa-icon [icon]="closeIcon" class="w-5 h-5"></fa-icon>
-                    </button>
-                </div>
-                <!-- Modal body -->
-                <form (submit)="onChannelSubmit()">
-                    <div class="modal-form-container">
-                        <div>    
-                            <input type="text" name="name" id="name" class="modal-form-input" placeholder="Channel name"
-                            required="" [(ngModel)]="newChannelName">
-                        </div>
-                    </div>
-                    <button type="submit" class="modal-form-button">
-                        Create channel
-                    </button>
-                </form>
-            </div>
+    <!-- Menu creating a channel -->
+    <div [class.hidden]="!isCreateChannelVisible" class="header-dropdown left-16 top-[8.5rem]">
+        <div class="px-4 pt-4">
+          <h4 class="header-dropdown-title">Create channel</h4>
         </div>
-    </div>
+        <div class="p-3">
+          <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Channel name" [(ngModel)]="newChannelName">
+        </div>
+        <div class="p-3">
+          <button type="submit" class="modal-form-button" (click)="handleChannelCreate()">Create</button>
+        </div>
+        
+      </div>
+    <!-- Menu for adding friends -->
+    <div [class.hidden]="!isAddFriendVisible" class="header-dropdown left-16">
+        <div class="px-4 pt-4">
+          <h4 class="header-dropdown-title">Add friends</h4>
+        </div>
+        <div class="p-3">
+          <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+        </div>
+        <ul class="user-dropdown-list">
+          @for (user of usersList | userFilter: userSearch; track user) {
+            <li>
+              <div class="user-dropdown-list-item" (click)="handleAddFriend(user)">
+                <p class="user-dropdown-list-item-text">{{user.username}}</p>
+              </div>
+            </li>
+          }
+        </ul>
+      </div>
     } @else {
     <login-form (onSuccessfulLogin)="handleLogin()" />
     }

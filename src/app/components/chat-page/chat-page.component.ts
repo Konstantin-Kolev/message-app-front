@@ -10,30 +10,38 @@ import { faXmark } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FormsModule } from '@angular/forms';
 import { ChannelsApiService } from '../../services/channels-api.service';
+import { UserType } from '../../models/user.model';
+import { UserApiService } from '../../services/user-api.service';
+import { FilterPipe } from '../../pipes/filter.pipe';
 
 @Component({
   selector: 'app-chat-page',
   standalone: true,
-  imports: [ChatWindowComponent, ChannelListComponent, CommonModule, SideBarComponent, LoginFormComponent, FontAwesomeModule, FormsModule],
+  imports: [ChatWindowComponent, ChannelListComponent, CommonModule, SideBarComponent, LoginFormComponent, FontAwesomeModule, FormsModule, FilterPipe],
   templateUrl: './chat-page.component.html',
   styleUrl: './chat-page.component.css'
 })
 export class ChatPageComponent implements OnInit {
 
-  constructor(public userStateService: UserStateService, private channelsApiService: ChannelsApiService) {
+  constructor(public userStateService: UserStateService, private channelsApiService: ChannelsApiService, private userApiService: UserApiService) {
   }
 
   closeIcon = faXmark;
 
   newChannelName: string = '';
+  userSearch: string = '';
 
   public selectedChannel: ChannelType | null = null;
   public channelList: ChannelType[] = [];
   public chatsList: ChannelType[] = [];
+  public usersList: UserType[] = [];
+
   public isCreateChannelVisible = false;
+  public isAddFriendVisible = false;
 
   ngOnInit(): void {
     this.loadChannels();
+    this.loadUsersForFriends();
   }
 
   private loadChannels(): void {
@@ -46,8 +54,16 @@ export class ChatPageComponent implements OnInit {
     }
   }
 
+  private loadUsersForFriends(): void {
+    const currentUser = this.userStateService.getCurrentUser()();
+    if (currentUser) {
+      this.usersList = this.userApiService.getUsersForFriends(currentUser);
+    }
+  }
+
   public handleLogin() {
     this.loadChannels();
+    this.loadUsersForFriends();
   }
 
   public handleChannelDelete() {
@@ -59,11 +75,28 @@ export class ChatPageComponent implements OnInit {
     this.selectedChannel = { ...element };
   }
 
-  public toggleChannelCreateModal() {
-    this.isCreateChannelVisible = !this.isCreateChannelVisible;
+  public toggleAddFriend() {
+    this.isAddFriendVisible = !this.isAddFriendVisible;
+    this.isCreateChannelVisible = false;
+    this.userSearch = '';
   }
 
-  public onChannelSubmit() {
+  public handleAddFriend(selectedUser: UserType) {
+    const currentUser = this.userStateService.getCurrentUser()();
+    if (currentUser && currentUser.id && selectedUser.id) {
+      this.channelsApiService.createFriendChat(currentUser, selectedUser);
+      this.loadChannels();
+      this.toggleAddFriend();
+    }
+  }
+
+  public toggleChannelCreate() {
+    this.isCreateChannelVisible = !this.isCreateChannelVisible;
+    this.isAddFriendVisible = false;
+    this.userSearch = '';
+  }
+
+  public handleChannelCreate() {
     var currentUser = this.userStateService.getCurrentUser()();
     if (currentUser && currentUser.id) {
       this.channelsApiService.createChannel({
@@ -75,7 +108,7 @@ export class ChatPageComponent implements OnInit {
       });
 
       this.loadChannels();
-      this.toggleChannelCreateModal();
+      this.toggleChannelCreate();
       this.newChannelName = '';
     }
   }

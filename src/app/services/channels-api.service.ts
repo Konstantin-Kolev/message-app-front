@@ -72,6 +72,20 @@ export class ChannelsApiService {
     return channel;
   }
 
+  public createFriendChat(user1: UserType, user2: UserType) {
+    const id = this.channelsList.length + 1;
+    const newChat: ChannelType = {
+      id,
+      channelName: `${user1.username}|${user2.username}`,
+      channelType: 'friend',
+      ownerId: user1.id!,
+      adminIds: [user1.id!, user2.id!],
+      memberIds: [user1.id!, user2.id!]
+    };
+
+    this.channelsList.push(newChat);
+  }
+
   public removeChannel(channelId: number) {
     this.channelsList = this.channelsList.filter((channel) => channel.id !== channelId);
   }

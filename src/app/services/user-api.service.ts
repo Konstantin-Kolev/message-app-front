@@ -40,6 +40,10 @@ export class UserApiService {
     return user;
   }
 
+  public getUsersForFriends(currentUser: UserType) {
+    return this.userList.filter((user) => user.id !== currentUser.id);
+  }
+
   public login(email: string, password: string): UserType | undefined {
     return this.userList.find((user) => user.email === email || user.password === password);
   }

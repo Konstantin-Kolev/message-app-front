@@ -5,7 +5,7 @@
       {{userStateService.getCurrentUser()()?.username}}
     </span>
   </div>
-  <div class="sidebar-icon group">
+  <div class="sidebar-icon group" (click)="onAddFriend.emit()">
     <fa-icon [icon]="addUserIcon"></fa-icon>
     <span class="sidebar-tooltip group-hover:scale-100">
       Add friend

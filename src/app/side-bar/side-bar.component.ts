@@ -24,6 +24,9 @@ export class SideBarComponent {
   @Output()
   public onChannelCreate = new EventEmitter();
 
+  @Output()
+  public onAddFriend = new EventEmitter();
+
   public logoutClick() {
     this.userStateService.clearUser();
   }
