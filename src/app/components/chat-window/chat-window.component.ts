@@ -168,6 +168,7 @@ export class ChatWindowComponent implements OnChanges {
     if (this.selectedChannel && this.selectedChannel.id) {
       this.channelsApiService.removeChannel(this.selectedChannel.id);
       this.onChannelDelete.emit();
+      this.toggleDelete();
     }
   }
 

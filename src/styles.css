@@ -262,6 +262,15 @@
   .user-dropdown-list-item-text {
     @apply w-full py-2 ms-2 text-sm font-medium text-gray-900 rounded
   }
+
+  .chat-missing-message-container {
+    @apply flex items-center justify-center h-full
+    bg-gray-300
+  }
+
+  .chat-missing-message-text {
+    @apply text-gray-900 text-3xl
+  }
 }
 
 ::-webkit-scrollbar {
