@@ -1,37 +1,39 @@
 @if (userStateService.getCurrentUser()()) {
-  <div class="layout">
-    <side-bar (onChannelCreate)="toggleChannelCreateModal()"/>
-    <div app-channel-list class="channel-list" [channelList]="channelList" [chatsList]="chatsList" (onChannelSelect)="handleChannelSelect($event)"></div>
-    <app-chat-window [selectedChannel]="this.selectedChannel" />
-  </div>
-  <div id="defaultModal" tabindex="-1" aria-hidden="true" [class.hidden]="!isCreateChannelVisible" class="modal-container">
-    <div class="modal-content-layout">
-        <!-- Modal content -->
-        <div class="modal-content">
-            <!-- Modal header -->
-            <div class="modal-header-container">
-                <h3 class="modal-header-text">
-                    Create New Channel
-                </h3>
-                <button type="button" class="modal-header-button" (click)="toggleChannelCreateModal()">
-                    <fa-icon [icon]="closeIcon" class="w-5 h-5"></fa-icon>
-                </button>
-            </div>
-            <!-- Modal body -->
-            <form (submit)="onChannelSubmit()">
-                <div class="modal-form-container">
-                    <div>
-                        <label for="name" class="moadl-form-label">Name</label>
-                        <input type="text" name="name" id="name" class="modal-form-input" placeholder="Channel name" required="" [(ngModel)]="newChannelName">
-                    </div>
+    <div class="layout">
+        <side-bar (onChannelCreate)="toggleChannelCreateModal()" />
+        <div app-channel-list class="channel-list" [channelList]="channelList" [chatsList]="chatsList"
+            (onChannelSelect)="handleChannelSelect($event)"></div>
+        <app-chat-window [selectedChannel]="this.selectedChannel" />
+    </div>
+    <div id="channelCreateModal" tabindex="-1" aria-hidden="true" [class.hidden]="!isCreateChannelVisible"
+        class="modal-container">
+        <div class="modal-content-layout">
+            <!-- Modal content -->
+            <div class="modal-content">
+                <!-- Modal header -->
+                <div class="modal-header-container">
+                    <h3 class="modal-header-text">
+                        Create New Channel
+                    </h3>
+                    <button type="button" class="modal-header-button" (click)="toggleChannelCreateModal()">
+                        <fa-icon [icon]="closeIcon" class="w-5 h-5"></fa-icon>
+                    </button>
                 </div>
-                <button type="submit" class="modal-form-button">
-                    Create channel
-                </button>
-            </form>
+                <!-- Modal body -->
+                <form (submit)="onChannelSubmit()">
+                    <div class="modal-form-container">
+                        <div>    
+                            <input type="text" name="name" id="name" class="modal-form-input" placeholder="Channel name"
+                            required="" [(ngModel)]="newChannelName">
+                        </div>
+                    </div>
+                    <button type="submit" class="modal-form-button">
+                        Create channel
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
-} @else {
-  <login-form (onSuccessfulLogin)="handleLogin()"/>
-}
+    } @else {
+    <login-form (onSuccessfulLogin)="handleLogin()" />
+    }

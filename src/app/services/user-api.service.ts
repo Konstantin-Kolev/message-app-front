@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UserType } from '../models/user.model';
+import { ChannelType } from '../models/channel.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,13 +34,21 @@ export class UserApiService {
     }
   ]
 
-  public createUser(user: UserType) {
+  public createUser(user: UserType): UserType {
     user.id = this.userList.length + 1;
     this.userList.push(user);
     return user;
   }
 
-  public login(email: string, password: string) {
+  public login(email: string, password: string): UserType | undefined {
     return this.userList.find((user) => user.email === email || user.password === password);
+  }
+
+  public getChannelMemebers(channel: ChannelType): UserType[] {
+    return this.userList.filter((user) => channel.memberIds.includes(user.id!));
+  }
+
+  public getChannelAdmins(channel: ChannelType): UserType[] {
+    return this.userList.filter((user) => channel.adminIds.includes(user.id!));
   }
 }

@@ -72,6 +72,14 @@ export class ChannelsApiService {
     return channel;
   }
 
+  public renameChannel(channelId: number, newName: string) {
+    this.channelsList.map((channel) => {
+      if (channel.id === channelId) {
+        channel.channelName = newName;
+      }
+    });
+  }
+
   public getChannelsForUser(user: UserType): ChannelType[] {
     var result = this.channelsList.filter((channel) => channel.memberIds.includes(user.id!))
       .map((channel) => {
@@ -83,5 +91,13 @@ export class ChannelsApiService {
       });
 
     return result;
+  }
+
+  public addAdminToChannel(channelId: number, adminId: number): void {
+    this.channelsList.map((channel) => {
+      if (channel.id === channelId && !channel.adminIds.includes(adminId)) {
+        channel.adminIds.push(adminId);
+      }
+    });
   }
 }
