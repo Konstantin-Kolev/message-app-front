@@ -48,6 +48,10 @@ export class UserApiService {
     return this.userList.filter((user) => channel.memberIds.includes(user.id!));
   }
 
+  public getUsersNotInChannel(channel: ChannelType): UserType[] {
+    return this.userList.filter((user) => !channel.memberIds.includes(user.id!));
+  }
+
   public getChannelAdmins(channel: ChannelType): UserType[] {
     return this.userList.filter((user) => channel.adminIds.includes(user.id!));
   }

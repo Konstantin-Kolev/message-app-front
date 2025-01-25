@@ -3,16 +3,45 @@
     <div class="header">
       <h3 class="header-title">{{selectedChannel.channelName}}</h3>
       @if(currentUser && selectedChannel.adminIds.includes(currentUser.id!)) {
-        <fa-icon [icon]="addUserIcon" class="header-icon"></fa-icon>
-        <fa-icon [icon]="removeUserIcon" class="header-icon hover:text-red-600"></fa-icon>
-        <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAdminPannel()"></fa-icon>
+        <fa-icon [icon]="addUserIcon" class="header-icon" (click)="toggleAddUser()"></fa-icon>
+        <fa-icon [icon]="usersIcon" class="header-icon" (click)="toggleUsersList()"></fa-icon>
         <fa-icon [icon]="editIcon" class="header-icon" (click)="toggleRenameForm()"></fa-icon>
       }
       @if(currentUser && selectedChannel.ownerId === currentUser.id) {
+        <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAddAdmin()"></fa-icon>
+        <fa-icon [icon]="userMinusIcon" class="header-icon" (click)="toggleAdminList()"></fa-icon>
         <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-600"></fa-icon>
       }
     </div>
-    <div [class.hidden]="!isAdminDropdownVisible" class="header-dropdown">
+    <div [class.hidden]="!isAddUserVisible" class="header-dropdown">
+      <div class="p-3">
+        <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+      </div>
+      <ul class="user-dropdown-list">
+        @for (user of possibleUsers | userFilter: userSearch; track user) {
+          <li>
+            <div class="user-dropdown-list-item" (click)="handleAddUser(user)">
+              <p class="user-dropdown-list-item-text">{{user.username}}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+    <div [class.hidden]="!isUserListVisible" class="header-dropdown">
+      <div class="p-3">
+        <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+      </div>
+      <ul class="user-dropdown-list">
+        @for (user of channelMembers | userFilter: userSearch; track user) {
+          <li>
+            <div class="user-dropdown-list-item" (click)="handleRemoveUser(user)">
+              <p class="user-dropdown-list-item-text hover:text-red-600">{{user.username}}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+    <div [class.hidden]="!isAddAdminVisible" class="header-dropdown">
       <div class="p-3">
         <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
       </div>
@@ -21,6 +50,34 @@
           <li>
             <div class="user-dropdown-list-item" (click)="handleAdminAdd(user)">
               <p class="user-dropdown-list-item-text">{{user.username}}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+    <div [class.hidden]="!isAdminListVisible" class="header-dropdown">
+      <div class="p-3">
+        <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+      </div>
+      <ul class="user-dropdown-list">
+        @for (user of channelAdmins | userFilter: userSearch; track user) {
+          <li>
+            <div class="user-dropdown-list-item" (click)="handleRemoveAdmin(user)">
+              <p class="user-dropdown-list-item-text">{{user.username}}</p>
+            </div>
+          </li>
+        }
+      </ul>
+    </div>
+    <div [class.hidden]="!isUserListVisible" class="header-dropdown">
+      <div class="p-3">
+        <input type="text" id="input-group-search" class="header-dropdown-input" placeholder="Search user" [(ngModel)]="userSearch">
+      </div>
+      <ul class="user-dropdown-list">
+        @for (user of channelMembers | userFilter: userSearch; track user) {
+          <li>
+            <div class="user-dropdown-list-item" (click)="handleRemoveUser(user)">
+              <p class="user-dropdown-list-item-text hover:text-red-600">{{user.username}}</p>
             </div>
           </li>
         }
@@ -35,7 +92,6 @@
       </div>
       
     </div>
-    
     <div class="content-list">
       @for (message of channelMessages; track message) {
         <div class="post">

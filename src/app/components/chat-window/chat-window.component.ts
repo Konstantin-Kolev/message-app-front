@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { MessageType } from '../../models/message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenToSquare, faTrash, faUserMinus, faUserPlus, faUserTie, faXmark } from '@fortawesome/free-solid-svg-icons';
+import { faPenToSquare, faTrash, faUserMinus, faUserPlus, faUsers, faUserTie, faXmark } from '@fortawesome/free-solid-svg-icons';
 import { ChannelType } from '../../models/channel.model';
 import { MessagesApiService } from '../../services/messages-api.service';
 import { UserStateService } from '../../services/user-state.service';
@@ -30,6 +30,8 @@ export class ChatWindowComponent implements OnChanges {
     if (changes['selectedChannel'].currentValue) {
       this.loadMessagesForChannel(changes['selectedChannel'].currentValue);
       this.loadMemberInformation(changes['selectedChannel'].currentValue);
+      this.loadPossibleUsers(changes['selectedChannel'].currentValue);
+      this.loadAdminInformation(changes['selectedChannel'].currentValue);
     }
   }
 
@@ -39,17 +41,22 @@ export class ChatWindowComponent implements OnChanges {
   editIcon = faPenToSquare;
   deleteIcon = faTrash;
   adminIcon = faUserTie;
+  userMinusIcon = faUserMinus;
   addUserIcon = faUserPlus;
-  removeUserIcon = faUserMinus;
+  usersIcon = faUsers;
   closeIcon = faXmark;
 
   public channelMessages: MessageType[] = [];
+  public possibleUsers: UserType[] = [];
   public channelMembers: UserType[] = [];
   public channelAdmins: UserType[] = [];
   public currentUser: UserType | null;
   public currentMessage: string = '';
 
-  public isAdminDropdownVisible: boolean = false;
+  public isAddAdminVisible: boolean = false;
+  public isAddUserVisible: boolean = false;
+  public isUserListVisible: boolean = false;
+  public isAdminListVisible: boolean = false;
   public userSearch: string = '';
 
   public isRenameVisible: boolean = false;
@@ -57,6 +64,10 @@ export class ChatWindowComponent implements OnChanges {
 
   private loadMessagesForChannel(channel: ChannelType): void {
     this.channelMessages = this.messagesApi.getMessagesForChannel(channel);
+  }
+
+  private loadPossibleUsers(channel: ChannelType): void {
+    this.possibleUsers = this.userApiService.getUsersNotInChannel(channel);
   }
 
   private loadMemberInformation(channel: ChannelType): void {
@@ -67,8 +78,8 @@ export class ChatWindowComponent implements OnChanges {
     this.channelAdmins = this.userApiService.getChannelAdmins(channel);
   }
 
-  public toggleAdminPannel(): void {
-    this.isAdminDropdownVisible = !this.isAdminDropdownVisible;
+  public toggleAddAdmin(): void {
+    this.isAddAdminVisible = !this.isAddAdminVisible;
     this.userSearch = '';
   }
 
@@ -76,7 +87,20 @@ export class ChatWindowComponent implements OnChanges {
     if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
       this.channelsApiService.addAdminToChannel(this.selectedChannel.id, selectedUser.id);
       this.loadAdminInformation(this.selectedChannel);
-      this.toggleAdminPannel();
+      this.toggleAddAdmin();
+    }
+  }
+
+  public toggleAdminList(): void {
+    this.isAdminListVisible = !this.isAdminListVisible;
+    this.userSearch = '';
+  }
+
+  public handleRemoveAdmin(selectedUser: UserType): void {
+    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
+      this.channelsApiService.removeAdminFromChannel(this.selectedChannel.id, selectedUser.id);
+      this.loadAdminInformation(this.selectedChannel);
+      this.toggleAdminList();
     }
   }
 
@@ -90,6 +114,35 @@ export class ChatWindowComponent implements OnChanges {
       this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName);
       this.selectedChannel.channelName = this.newName;
       this.toggleRenameForm();
+    }
+  }
+
+  public toggleAddUser(): void {
+    this.isAddUserVisible = !this.isAddUserVisible;
+    this.userSearch = '';
+  }
+
+  public handleAddUser(selectedUser: UserType): void {
+    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
+      this.channelsApiService.addMemberToChannel(this.selectedChannel.id, selectedUser.id);
+      this.loadMemberInformation(this.selectedChannel);
+      this.loadPossibleUsers(this.selectedChannel);
+      this.toggleAddUser();
+    }
+  }
+
+  public toggleUsersList(): void {
+    this.isUserListVisible = !this.isUserListVisible;
+    this.userSearch = '';
+  }
+
+  public handleRemoveUser(selectedUser: UserType): void {
+    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
+      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id);
+      this.loadMemberInformation(this.selectedChannel);
+      this.loadPossibleUsers(this.selectedChannel);
+      this.loadAdminInformation(this.selectedChannel);
+      this.toggleUsersList();
     }
   }
 

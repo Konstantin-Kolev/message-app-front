@@ -93,11 +93,41 @@ export class ChannelsApiService {
     return result;
   }
 
-  public addAdminToChannel(channelId: number, adminId: number): void {
+  public addAdminToChannel(channelId: number, userId: number): void {
     this.channelsList.map((channel) => {
-      if (channel.id === channelId && !channel.adminIds.includes(adminId)) {
-        channel.adminIds.push(adminId);
+      if (channel.id === channelId && !channel.adminIds.includes(userId)) {
+        channel.adminIds.push(userId);
       }
     });
+  }
+
+  public removeAdminFromChannel(channelId: number, userId: number): void {
+    this.channelsList.map((channel) => {
+      if (channel.id === channelId && channel.adminIds.includes(userId)) {
+        const adminIndex = channel.adminIds.indexOf(userId);
+        channel.adminIds.splice(adminIndex, 1);
+      }
+    });
+  }
+
+  public addMemberToChannel(channelId: number, userId: number): void {
+    this.channelsList.map((channel) => {
+      if (channel.id === channelId) {
+        channel.memberIds.push(userId);
+      }
+    })
+  }
+
+  public removeMemberFromChannel(channelId: number, userId: number): void {
+    this.channelsList.map((channel) => {
+      if (channel.id === channelId) {
+        const memberIndex = channel.memberIds.indexOf(userId);
+        const adminIndex = channel.adminIds.indexOf(userId);
+        channel.memberIds.splice(memberIndex, 1);
+        if (adminIndex !== -1) {
+          channel.adminIds.splice(adminIndex, 1);
+        }
+      }
+    })
   }
 }
