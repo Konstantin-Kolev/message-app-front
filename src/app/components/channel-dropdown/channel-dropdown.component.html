@@ -10,7 +10,7 @@
   @if(expanded){
     @for (element of contentList; track element) {
       <div class="channel-selection">
-        <h6 class="channel-selection-text">{{element}}</h6>
+        <h6 class="channel-selection-text" (click)="onChannelSelect.emit(element)">{{element.channelName}}</h6>
       </div>
     }
   }

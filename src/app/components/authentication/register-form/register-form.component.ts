@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { User } from '../../../models/user.model';
+import { UserType } from '../../../models/user.model';
 import { UserApiService } from '../../../services/user-api.service';
 import { UserStateService } from '../../../services/user-state.service';
 import { Router } from '@angular/router';
@@ -18,24 +18,26 @@ export class RegisterFormComponent {
     private userStateService: UserStateService,
     private router: Router) { }
 
-  username: string = '';
-  email: string = '';
-  password: string = '';
-  passwordConfirm: string = '';
-  user: User = {
+  register = {
+    username: '',
     email: '',
     password: '',
-    username: ''
+    passwordConfirm: ''
   }
 
+  passwordMatchError = false;
+
   onSubmit() {
-    this.user = {
-      email: this.email,
-      password: this.password,
-      username: this.username
+    if (this.register.password !== this.register.passwordConfirm) {
+      this.passwordMatchError = true;
+      return;
     }
-    this.user = this.userApiService.createUser(this.user);
-    this.userStateService.setUser(this.user);
+    const user = this.userApiService.createUser({
+      email: this.register.email,
+      password: this.register.password,
+      username: this.register.username
+    });
+    this.userStateService.setUser(user);
 
     this.router.navigateByUrl('');
   }
