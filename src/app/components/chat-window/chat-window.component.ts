@@ -79,16 +79,20 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   private loadMemberInformation(channel: ChannelType): void {
-    this.channelMembers = this.userApiService.getChannelMemebers(channel);
+    this.channelsApiService.getChannelMembers(channel.id).subscribe((response: any) => {
+      this.channelMembers = response.data;
+    });
   }
 
   private loadAdminInformation(channel: ChannelType): void {
-    this.channelAdmins = this.userApiService.getChannelAdmins(channel);
+    this.channelsApiService.getChannelAdmins(channel.id).subscribe((response: any) => {
+      this.channelAdmins = response.data;
+    });
   }
 
   private toggleDropown(dropdownStateField: string): void {
     const toggleValue = !this.dropdownState[dropdownStateField];
-    for(const k in this.dropdownState) {
+    for (const k in this.dropdownState) {
       this.dropdownState[k] = false;
     }
     this.dropdownState[dropdownStateField] = toggleValue;
@@ -100,10 +104,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleAdminAdd(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.addAdminToChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleAddAdmin();
+    if (this.selectedChannel) {
+      this.channelsApiService.addAdminToChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleAddAdmin();
+      });
     }
   }
 
@@ -113,10 +118,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleRemoveAdmin(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.removeAdminFromChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleAdminList();
+    if (this.selectedChannel) {
+      this.channelsApiService.removeAdminFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleAdminList();
+      });
     }
   }
 
@@ -126,10 +132,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleChannelRename(): void {
-    if (this.newName !== '' && this.selectedChannel && this.selectedChannel.id) {
-      this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName);
-      this.selectedChannel.channelName = this.newName;
-      this.toggleRenameForm();
+    if (this.newName !== '' && this.selectedChannel) {
+      this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName).subscribe(() => {
+        this.selectedChannel!.name = this.newName;
+        this.toggleRenameForm();
+      });
     }
   }
 
@@ -139,11 +146,12 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleAddUser(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.addMemberToChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadMemberInformation(this.selectedChannel);
-      this.loadPossibleUsers(this.selectedChannel);
-      this.toggleAddUser();
+    if (this.selectedChannel) {
+      this.channelsApiService.addMemberToChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadMemberInformation(this.selectedChannel!);
+        this.loadPossibleUsers(this.selectedChannel!);
+        this.toggleAddUser();
+      });
     }
   }
 
@@ -153,12 +161,13 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleRemoveUser(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadMemberInformation(this.selectedChannel);
-      this.loadPossibleUsers(this.selectedChannel);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleUsersList();
+    if (this.selectedChannel) {
+      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(()=>{
+        this.loadMemberInformation(this.selectedChannel!);
+        this.loadPossibleUsers(this.selectedChannel!);
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleUsersList();
+      });
     }
   }
 
@@ -167,10 +176,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleChannelDelete(): void {
-    if (this.selectedChannel && this.selectedChannel.id) {
-      this.channelsApiService.removeChannel(this.selectedChannel.id);
-      this.onChannelDelete.emit();
-      this.toggleDelete();
+    if (this.selectedChannel) {
+      this.channelsApiService.removeChannel(this.selectedChannel.id).subscribe(() => {
+        this.onChannelDelete.emit();
+        this.toggleDelete();
+      });
     }
   }
 

@@ -48,11 +48,21 @@ export class ChatPageComponent implements OnInit {
     var allChannels: ChannelType[];
     var currentUser = this.userStateService.getCurrentUser()();
     if (currentUser) {
-      allChannels = this.channelsApiService.getChannelsForUser(currentUser);
-      this.channelList = allChannels.filter((channel) => channel.channelType === 'group');
-      this.chatsList = allChannels.filter((channel) => channel.channelType === 'friend');
+      this.channelsApiService.getChannelsForUser(currentUser.id).subscribe((response: any) => {
+        allChannels = response.data;
+        this.channelList = allChannels.filter((channel) => channel.type === 1);
+        this.chatsList = allChannels.filter((channel) => channel.type === 2).map(channel => this.modifyFriendChatName(channel, currentUser!));
+      });
     }
   }
+
+  private modifyFriendChatName(channel: ChannelType, user: UserType) {
+      var modified = { ...channel };
+      modified.name = modified.name.replace(user.username, '');
+      modified.name = modified.name.replace('|', '');
+  
+      return modified;
+    }
 
   private loadUsersForFriends(): void {
     const currentUser = this.userStateService.getCurrentUser()();
@@ -85,10 +95,17 @@ export class ChatPageComponent implements OnInit {
 
   public handleAddFriend(selectedUser: UserType) {
     const currentUser = this.userStateService.getCurrentUser()();
-    if (currentUser && currentUser.id && selectedUser.id) {
-      this.channelsApiService.createFriendChat(currentUser, selectedUser);
-      this.loadChannels();
-      this.toggleAddFriend();
+    if (currentUser) {
+      this.channelsApiService.createFriendChat(currentUser.id, selectedUser.id).subscribe({
+        next: () => {
+          this.loadChannels();
+          this.toggleAddFriend();
+        },
+        error: () => {
+          this.toggleAddFriend();
+        }
+      });
+      
     }
   }
 
@@ -100,18 +117,16 @@ export class ChatPageComponent implements OnInit {
 
   public handleChannelCreate() {
     var currentUser = this.userStateService.getCurrentUser()();
-    if (currentUser && currentUser.id) {
+    if (currentUser) {
       this.channelsApiService.createChannel({
-        channelName: this.newChannelName,
-        channelType: 'group',
-        ownerId: currentUser.id,
-        adminIds: [currentUser.id],
-        memberIds: [currentUser.id]
+        name: this.newChannelName,
+        type: 1,
+        ownerId: currentUser.id
+      }).subscribe(() => {
+        this.loadChannels();
+        this.toggleChannelCreate();
+        this.newChannelName = '';
       });
-
-      this.loadChannels();
-      this.toggleChannelCreate();
-      this.newChannelName = '';
     }
   }
 }
