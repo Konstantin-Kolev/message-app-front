@@ -73,7 +73,9 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   private loadPossibleUsers(channel: ChannelType): void {
-    this.possibleUsers = this.userApiService.getUsersNotInChannel(channel);
+    this.userApiService.getUsersNotInChannel(channel.id).subscribe((response: any) => {
+      this.possibleUsers = response.data;
+    });
   }
 
   private loadMemberInformation(channel: ChannelType): void {

@@ -3,7 +3,7 @@ import { ChatWindowComponent } from "../chat-window/chat-window.component";
 import { ChannelListComponent } from "../channel-list/channel-list.component";
 import { UserStateService } from '../../services/user-state.service';
 import { CommonModule } from '@angular/common';
-import { SideBarComponent } from "../../side-bar/side-bar.component";
+import { SideBarComponent } from "../side-bar/side-bar.component";
 import { LoginFormComponent } from "../authentication/login-form/login-form.component";
 import { ChannelType } from '../../models/channel.model';
 import { faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -57,7 +57,9 @@ export class ChatPageComponent implements OnInit {
   private loadUsersForFriends(): void {
     const currentUser = this.userStateService.getCurrentUser()();
     if (currentUser) {
-      this.usersList = this.userApiService.getUsersForFriends(currentUser);
+      this.userApiService.getUsersForFriends(currentUser.id).subscribe((response: any) => {
+        this.usersList = response.data;
+      })
     }
   }
 

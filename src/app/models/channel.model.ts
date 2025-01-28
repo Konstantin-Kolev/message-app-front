@@ -1,5 +1,5 @@
 export type ChannelType = {
-  id?: number;
+  id: number;
   channelName: string;
   channelType: string;
   ownerId: number;

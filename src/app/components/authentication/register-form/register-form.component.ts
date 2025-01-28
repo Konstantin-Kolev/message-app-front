@@ -26,21 +26,28 @@ export class RegisterFormComponent {
   }
 
   passwordMatchError = false;
+  registerError = false;
+  registerErrorMessage = '';
 
   onSubmit() {
     if (this.register.password !== this.register.passwordConfirm) {
       this.passwordMatchError = true;
       return;
     }
-    const user = this.userApiService.createUser({
+
+    this.userApiService.createUser({
       email: this.register.email,
       password: this.register.password,
       username: this.register.username
-    });
-    this.userStateService.setUser(user);
-
-    this.router.navigateByUrl('');
+    }).subscribe({
+      next: (response: any) => {
+        this.userStateService.setUser(response.data);
+        this.router.navigateByUrl('');
+      },
+      error: (err) => {
+        this.registerError = true;
+        this.registerErrorMessage = err.error.message;
+      }
+    })
   }
-
-
 }

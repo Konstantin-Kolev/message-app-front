@@ -6,6 +6,11 @@
                     Create an account
                 </h1>
                 <form class="login-form" (ngSubmit)="onSubmit()">
+                    @if(registerError) {
+                        <div class="login-error-message">
+                            <p>{{registerErrorMessage}}</p>
+                        </div>
+                    }
                     @if(email.invalid && (email.dirty || email.touched)) {
                         @if(email.hasError('required')) {
                             <div class="login-error-message">
