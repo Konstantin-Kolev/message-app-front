@@ -27,7 +27,11 @@ export class SideBarComponent {
   @Output()
   public onAddFriend = new EventEmitter();
 
+  @Output()
+  public onLogout = new EventEmitter();
+
   public logoutClick() {
     this.userStateService.clearUser();
+    this.onLogout.emit();
   }
 }

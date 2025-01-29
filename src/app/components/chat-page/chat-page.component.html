@@ -1,8 +1,8 @@
 @if (userStateService.getCurrentUser()()) {
     <div class="layout">
-        <side-bar (onChannelCreate)="toggleChannelCreate()" (onAddFriend)="toggleAddFriend()" />
+        <side-bar (onChannelCreate)="toggleChannelCreate()" (onAddFriend)="toggleAddFriend()" (onLogout)="handleLogout()" />
         <div app-channel-list class="channel-list" [channelList]="channelList" [chatsList]="chatsList"
-            (onChannelSelect)="handleChannelSelect($event)"></div>
+          (onChannelSelect)="handleChannelSelect($event)"></div>
         <app-chat-window [selectedChannel]="this.selectedChannel" (onChannelDelete)="handleChannelDelete()" />
     </div>
     <!-- Menu creating a channel -->

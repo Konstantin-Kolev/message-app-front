@@ -78,6 +78,10 @@ export class ChatPageComponent implements OnInit {
     this.loadUsersForFriends();
   }
 
+  public handleLogout() {
+    this.selectedChannel = null;
+  }
+
   public handleChannelDelete() {
     this.selectedChannel = null;
     this.loadChannels();
