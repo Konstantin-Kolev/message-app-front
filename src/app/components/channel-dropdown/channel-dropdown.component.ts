@@ -7,8 +7,7 @@ import { ChannelType } from '../../models/channel.model';
   selector: 'channel-dropdown',
   standalone: true,
   imports: [FontAwesomeModule],
-  templateUrl: './channel-dropdown.component.html',
-  styleUrl: './channel-dropdown.component.css'
+  templateUrl: './channel-dropdown.component.html'
 })
 export class ChannelDropdownComponent {
 

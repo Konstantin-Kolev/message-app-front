@@ -1,6 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { ChannelType } from '../models/channel.model';
-import { UserType } from '../models/user.model';
 import { ChannelCreate } from '../models/channel-create.model';
 import { HttpClient } from '@angular/common/http';
 import { environment } from '../environments/environment';
@@ -12,57 +10,6 @@ export class ChannelsApiService {
 
   private httpClient = inject(HttpClient);
   private baseUrl = `${environment.baseUrl}/channels`;
-
-  // private channelsList: ChannelType[] = [
-  //   {
-  //     id: 1,
-  //     channelName: 'some chat',
-  //     channelType: 'group',
-  //     ownerId: 1,
-  //     adminIds: [1],
-  //     memberIds: [1, 2]
-  //   },
-  //   {
-  //     id: 2,
-  //     channelName: 'super  channel',
-  //     channelType: 'group',
-  //     ownerId: 1,
-  //     adminIds: [1, 2],
-  //     memberIds: [1, 2]
-  //   },
-  //   {
-  //     id: 3,
-  //     channelName: 'talking about whatever',
-  //     channelType: 'group',
-  //     ownerId: 2,
-  //     adminIds: [2],
-  //     memberIds: [1, 2]
-  //   },
-  //   {
-  //     id: 4,
-  //     channelName: 'user1|user2',
-  //     channelType: 'friend',
-  //     ownerId: 1,
-  //     adminIds: [1, 2],
-  //     memberIds: [1, 2]
-  //   },
-  //   {
-  //     id: 5,
-  //     channelName: 'user1|user3',
-  //     channelType: 'friend',
-  //     ownerId: 1,
-  //     adminIds: [1, 3],
-  //     memberIds: [1, 3]
-  //   },
-  //   {
-  //     id: 6,
-  //     channelName: 'user1|random_user',
-  //     channelType: 'friend',
-  //     ownerId: 1,
-  //     adminIds: [1, 4],
-  //     memberIds: [1, 4]
-  //   },
-  // ];
 
   public createChannel(channel: ChannelCreate) {
     return this.httpClient.post(this.baseUrl, channel);

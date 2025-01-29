@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserType } from '../../../models/user.model';
 import { UserApiService } from '../../../services/user-api.service';
 import { UserStateService } from '../../../services/user-state.service';
 import { Router } from '@angular/router';
@@ -10,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.css', '../styles.css']
+  styleUrls: ['../styles.css']
 })
 export class RegisterFormComponent {
 

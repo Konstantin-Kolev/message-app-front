@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserStateService } from '../../../services/user-state.service';
 import { UserApiService } from '../../../services/user-api.service';
-import { UserType } from '../../../models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css', '../styles.css']
+  styleUrls: ['../styles.css']
 })
 export class LoginFormComponent {
 

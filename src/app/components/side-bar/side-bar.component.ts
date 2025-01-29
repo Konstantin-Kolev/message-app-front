@@ -8,8 +8,7 @@ import { CommonModule } from '@angular/common';
   selector: 'side-bar',
   standalone: true,
   imports: [FontAwesomeModule, CommonModule],
-  templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.css'
+  templateUrl: './side-bar.component.html'
 })
 export class SideBarComponent {
 

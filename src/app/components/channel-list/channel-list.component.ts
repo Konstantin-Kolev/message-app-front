@@ -7,8 +7,7 @@ import { ChannelType } from '../../models/channel.model';
   selector: '[app-channel-list]',
   standalone: true,
   imports: [ChannelDropdownComponent],
-  templateUrl: './channel-list.component.html',
-  styleUrl: './channel-list.component.css'
+  templateUrl: './channel-list.component.html'
 })
 export class ChannelListComponent {
 

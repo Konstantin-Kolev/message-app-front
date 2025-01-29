@@ -18,8 +18,7 @@ import { FilterPipe } from '../../pipes/filter.pipe';
   selector: 'app-chat-page',
   standalone: true,
   imports: [ChatWindowComponent, ChannelListComponent, CommonModule, SideBarComponent, LoginFormComponent, FontAwesomeModule, FormsModule, FilterPipe],
-  templateUrl: './chat-page.component.html',
-  styleUrl: './chat-page.component.css'
+  templateUrl: './chat-page.component.html'
 })
 export class ChatPageComponent implements OnInit {
 
@@ -57,12 +56,12 @@ export class ChatPageComponent implements OnInit {
   }
 
   private modifyFriendChatName(channel: ChannelType, user: UserType) {
-      var modified = { ...channel };
-      modified.name = modified.name.replace(user.username, '');
-      modified.name = modified.name.replace('|', '');
-  
-      return modified;
-    }
+    var modified = { ...channel };
+    modified.name = modified.name.replace(user.username, '');
+    modified.name = modified.name.replace('|', '');
+
+    return modified;
+  }
 
   private loadUsersForFriends(): void {
     const currentUser = this.userStateService.getCurrentUser()();
@@ -80,6 +79,10 @@ export class ChatPageComponent implements OnInit {
 
   public handleLogout() {
     this.selectedChannel = null;
+  }
+
+  public handleChannelRename() {
+    this.loadChannels();
   }
 
   public handleChannelDelete() {
@@ -109,7 +112,7 @@ export class ChatPageComponent implements OnInit {
           this.toggleAddFriend();
         }
       });
-      
+
     }
   }
 

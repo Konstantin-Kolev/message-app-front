@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MessageType } from '../../models/message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faTrash, faUserMinus, faUserPlus, faUsers, faUserTie, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -15,8 +15,7 @@ import { ChannelsApiService } from '../../services/channels-api.service';
   selector: 'app-chat-window',
   standalone: true,
   imports: [FontAwesomeModule, FormsModule, FilterPipe],
-  templateUrl: './chat-window.component.html',
-  styleUrl: './chat-window.component.css'
+  templateUrl: './chat-window.component.html'
 })
 export class ChatWindowComponent implements OnChanges {
 
@@ -37,6 +36,9 @@ export class ChatWindowComponent implements OnChanges {
 
   @Input()
   public selectedChannel: ChannelType | null = null;
+
+  @Output()
+  public onChannelRename = new EventEmitter();
 
   @Output()
   public onChannelDelete = new EventEmitter();
@@ -145,6 +147,7 @@ export class ChatWindowComponent implements OnChanges {
       this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName).subscribe(() => {
         this.selectedChannel!.name = this.newName;
         this.toggleRenameForm();
+        this.onChannelRename.emit();
       });
     }
   }
@@ -170,7 +173,7 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleRemoveUser(selectedUser: UserType): void {
-    if (this.selectedChannel) {
+    if (this.selectedChannel && selectedUser.id !== this.selectedChannel.owner.id) {
       this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
         this.loadMemberInformation(this.selectedChannel!);
         this.loadPossibleUsers(this.selectedChannel!);
