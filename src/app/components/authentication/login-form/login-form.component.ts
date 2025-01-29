@@ -2,7 +2,6 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UserStateService } from '../../../services/user-state.service';
 import { UserApiService } from '../../../services/user-api.service';
-import { UserType } from '../../../models/user.model';
 import { Router } from '@angular/router';
 
 @Component({
@@ -10,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './login-form.component.html',
-  styleUrls: ['./login-form.component.css', '../styles.css']
+  styleUrls: ['../styles.css']
 })
 export class LoginFormComponent {
 
@@ -22,7 +21,6 @@ export class LoginFormComponent {
     email: '',
     password: ''
   }
-  user: UserType | undefined = undefined;
 
   loginFailed: boolean = false;
 
@@ -30,13 +28,19 @@ export class LoginFormComponent {
   public onSuccessfulLogin = new EventEmitter();
 
   onSubmit(): void {
-    this.user = this.userApiService.login(this.login.email, this.login.password);
-    if (this.user) {
-      this.userStateService.setUser(this.user);
-      this.onSuccessfulLogin.emit();
-      this.router.navigateByUrl('');
-    } else {
-      this.loginFailed = true;
-    }
+    this.userApiService.login(this.login.email, this.login.password).subscribe({
+      next: (response: any) => {
+        if (response.code === 200) {
+          this.userStateService.setUser(response.data);
+          this.onSuccessfulLogin.emit();
+          this.router.navigateByUrl('');
+        }
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.loginFailed = true;
+        }
+      }
+    });
   }
 }

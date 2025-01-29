@@ -1,151 +1,60 @@
-import { Injectable } from '@angular/core';
-import { ChannelType } from '../models/channel.model';
-import { UserType } from '../models/user.model';
+import { inject, Injectable } from '@angular/core';
+import { ChannelCreate } from '../models/channel-create.model';
+import { HttpClient } from '@angular/common/http';
+import { environment } from '../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChannelsApiService {
 
-  private channelsList: ChannelType[] = [
-    {
-      id: 1,
-      channelName: 'some chat',
-      channelType: 'group',
-      ownerId: 1,
-      adminIds: [1],
-      memberIds: [1, 2]
-    },
-    {
-      id: 2,
-      channelName: 'super  channel',
-      channelType: 'group',
-      ownerId: 1,
-      adminIds: [1, 2],
-      memberIds: [1, 2]
-    },
-    {
-      id: 3,
-      channelName: 'talking about whatever',
-      channelType: 'group',
-      ownerId: 2,
-      adminIds: [2],
-      memberIds: [1, 2]
-    },
-    {
-      id: 4,
-      channelName: 'user1|user2',
-      channelType: 'friend',
-      ownerId: 1,
-      adminIds: [1, 2],
-      memberIds: [1, 2]
-    },
-    {
-      id: 5,
-      channelName: 'user1|user3',
-      channelType: 'friend',
-      ownerId: 1,
-      adminIds: [1, 3],
-      memberIds: [1, 3]
-    },
-    {
-      id: 6,
-      channelName: 'user1|random_user',
-      channelType: 'friend',
-      ownerId: 1,
-      adminIds: [1, 4],
-      memberIds: [1, 4]
-    },
-  ];
+  private httpClient = inject(HttpClient);
+  private baseUrl = `${environment.baseUrl}/channels`;
 
-  private modifyFriendChatName(channel: ChannelType, user: UserType) {
-    var modified = { ...channel };
-    modified.channelName = modified.channelName.replace(user.username, '');
-    modified.channelName = modified.channelName.replace('|', '');
-
-    return modified;
+  public createChannel(channel: ChannelCreate) {
+    return this.httpClient.post(this.baseUrl, channel);
   }
 
-  public createChannel(channel: ChannelType) {
-    channel.id = this.channelsList.length + 1;
-    this.channelsList.push(channel);
-    return channel;
-  }
-
-  public createFriendChat(user1: UserType, user2: UserType) {
-    const id = this.channelsList.length + 1;
-    const newChat: ChannelType = {
-      id,
-      channelName: `${user1.username}|${user2.username}`,
-      channelType: 'friend',
-      ownerId: user1.id!,
-      adminIds: [user1.id!, user2.id!],
-      memberIds: [user1.id!, user2.id!]
-    };
-
-    this.channelsList.push(newChat);
+  public createFriendChat(userId: number, friendId: number) {
+    return this.httpClient.post(`${this.baseUrl}/friend`, {
+      userId,
+      friendId
+    });
   }
 
   public removeChannel(channelId: number) {
-    this.channelsList = this.channelsList.filter((channel) => channel.id !== channelId);
+    return this.httpClient.delete(`${this.baseUrl}/${channelId}`);
   }
 
   public renameChannel(channelId: number, newName: string) {
-    this.channelsList.map((channel) => {
-      if (channel.id === channelId) {
-        channel.channelName = newName;
-      }
-    });
+    return this.httpClient.post(`${this.baseUrl}/rename/${channelId}?newName=${newName}`, {});
   }
 
-  public getChannelsForUser(user: UserType): ChannelType[] {
-    var result = this.channelsList.filter((channel) => channel.memberIds.includes(user.id!))
-      .map((channel) => {
-        if (channel.channelType === 'friend') {
-          return this.modifyFriendChatName(channel, user);
-        } else {
-          return channel;
-        }
-      });
-
-    return result;
+  public getChannelsForUser(userId: number) {
+    return this.httpClient.get(`${this.baseUrl}/byMember/${userId}`);
   }
 
-  public addAdminToChannel(channelId: number, userId: number): void {
-    this.channelsList.map((channel) => {
-      if (channel.id === channelId && !channel.adminIds.includes(userId)) {
-        channel.adminIds.push(userId);
-      }
-    });
+  public getChannelMembers(channelId: number) {
+    return this.httpClient.get(`${this.baseUrl}/${channelId}/members`);
   }
 
-  public removeAdminFromChannel(channelId: number, userId: number): void {
-    this.channelsList.map((channel) => {
-      if (channel.id === channelId && channel.adminIds.includes(userId)) {
-        const adminIndex = channel.adminIds.indexOf(userId);
-        channel.adminIds.splice(adminIndex, 1);
-      }
-    });
+  public getChannelAdmins(channelId: number) {
+    return this.httpClient.get(`${this.baseUrl}/${channelId}/admins`);
   }
 
-  public addMemberToChannel(channelId: number, userId: number): void {
-    this.channelsList.map((channel) => {
-      if (channel.id === channelId) {
-        channel.memberIds.push(userId);
-      }
-    })
+  public addAdminToChannel(channelId: number, userId: number) {
+    return this.httpClient.post(`${this.baseUrl}/${channelId}/addAdmin/${userId}`, {});
   }
 
-  public removeMemberFromChannel(channelId: number, userId: number): void {
-    this.channelsList.map((channel) => {
-      if (channel.id === channelId) {
-        const memberIndex = channel.memberIds.indexOf(userId);
-        const adminIndex = channel.adminIds.indexOf(userId);
-        channel.memberIds.splice(memberIndex, 1);
-        if (adminIndex !== -1) {
-          channel.adminIds.splice(adminIndex, 1);
-        }
-      }
-    })
+  public removeAdminFromChannel(channelId: number, userId: number) {
+    return this.httpClient.post(`${this.baseUrl}/${channelId}/removeAdmin/${userId}`, {});
+  }
+
+  public addMemberToChannel(channelId: number, userId: number) {
+    return this.httpClient.post(`${this.baseUrl}/${channelId}/addMember/${userId}`, {});
+  }
+
+  public removeMemberFromChannel(channelId: number, userId: number) {
+    return this.httpClient.post(`${this.baseUrl}/${channelId}/removeMember/${userId}`, {});
   }
 }

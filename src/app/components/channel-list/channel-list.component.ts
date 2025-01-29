@@ -1,15 +1,13 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { ChannelDropdownComponent } from "../channel-dropdown/channel-dropdown.component";
 import { UserStateService } from '../../services/user-state.service';
-import { ChannelsApiService } from '../../services/channels-api.service';
 import { ChannelType } from '../../models/channel.model';
 
 @Component({
   selector: '[app-channel-list]',
   standalone: true,
   imports: [ChannelDropdownComponent],
-  templateUrl: './channel-list.component.html',
-  styleUrl: './channel-list.component.css'
+  templateUrl: './channel-list.component.html'
 })
 export class ChannelListComponent {
 
@@ -20,7 +18,7 @@ export class ChannelListComponent {
   @Input()
   public chatsList: ChannelType[] = [];
 
-  constructor(public userStateService: UserStateService, public channelsApiService: ChannelsApiService) { }
+  constructor(public userStateService: UserStateService) { }
 
   @Output()
   public onChannelSelect = new EventEmitter();

@@ -1,16 +1,48 @@
 @if(selectedChannel) {
   <div class="content-container">
     <div class="header">
-      <h3 class="header-title">{{selectedChannel.channelName}}</h3>
-      @if(currentUser && selectedChannel.adminIds.includes(currentUser.id!)) {
-        <fa-icon [icon]="addUserIcon" class="header-icon" (click)="toggleAddUser()"></fa-icon>
-        <fa-icon [icon]="usersIcon" class="header-icon" (click)="toggleUsersList()"></fa-icon>
-        <fa-icon [icon]="editIcon" class="header-icon" (click)="toggleRenameForm()"></fa-icon>
-      }
-      @if(currentUser && selectedChannel.ownerId === currentUser.id) {
-        <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAddAdmin()"></fa-icon>
-        <fa-icon [icon]="userMinusIcon" class="header-icon" (click)="toggleAdminList()"></fa-icon>
-        <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-700" (click)="toggleDelete()"></fa-icon>
+      <h3 class="header-title">{{selectedChannel.name}}</h3>
+      @if (selectedChannel.type === 1) {
+        @if(isCurrentUserAdmin()) {
+          <div class="group">
+            <fa-icon [icon]="addUserIcon" class="header-icon" (click)="toggleAddUser()"></fa-icon>
+            <span class="header-tooltip right-80 group-hover:scale-100">
+              Add user
+            </span>
+          </div>
+          <div class="group">
+            <fa-icon [icon]="usersIcon" class="header-icon" (click)="toggleUsersList()"></fa-icon>
+            <span class="header-tooltip right-52 group-hover:scale-100">
+              List user/Remove user
+            </span>
+          </div>
+          <div class="group">
+            <fa-icon [icon]="editIcon" class="header-icon" (click)="toggleRenameForm()"></fa-icon>
+            <span class="header-tooltip right-[10.5rem] group-hover:scale-100">
+              Rename channel
+            </span>
+          </div>
+        }
+        @if(currentUser && selectedChannel.owner.id === currentUser.id) {
+          <div class="group">
+            <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAddAdmin()"></fa-icon>
+            <span class="header-tooltip right-[7.5rem] group-hover:scale-100">
+              Add admin
+            </span>
+          </div>
+          <div class="group">
+            <fa-icon [icon]="userMinusIcon" class="header-icon" (click)="toggleAdminList()"></fa-icon>
+            <span class="header-tooltip right-4 group-hover:scale-100">
+              List admins/Remove admin
+            </span>
+          </div>
+          <div class="group">  
+            <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-700" (click)="toggleDelete()"></fa-icon>
+            <span class="header-tooltip right-0 group-hover:scale-100">
+              Delete channel
+            </span>
+          </div>
+        }
       }
     </div>
     <!-- Add user dropdown  -->
@@ -113,10 +145,10 @@
         <div class="post">
           <div class="post-content">
             <p class="post-owner">
-              {{message.sentBy}}
+              {{message.sender}}
               <small>{{message.timestamp}}</small>
             </p>
-            <p class="post-text">{{message.message}}</p>
+            <p class="post-text">{{message.content}}</p>
           </div>
         </div>
       }

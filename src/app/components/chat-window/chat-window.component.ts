@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, OnDestroy, OnInit, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { MessageType } from '../../models/message.model';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPenToSquare, faTrash, faUserMinus, faUserPlus, faUsers, faUserTie, faXmark } from '@fortawesome/free-solid-svg-icons';
@@ -15,12 +15,11 @@ import { ChannelsApiService } from '../../services/channels-api.service';
   selector: 'app-chat-window',
   standalone: true,
   imports: [FontAwesomeModule, FormsModule, FilterPipe],
-  templateUrl: './chat-window.component.html',
-  styleUrl: './chat-window.component.css'
+  templateUrl: './chat-window.component.html'
 })
 export class ChatWindowComponent implements OnChanges {
 
-  constructor(private messagesApi: MessagesApiService,
+  constructor(private messagesApiService: MessagesApiService,
     private userStateService: UserStateService,
     private userApiService: UserApiService,
     private channelsApiService: ChannelsApiService) {
@@ -37,6 +36,9 @@ export class ChatWindowComponent implements OnChanges {
 
   @Input()
   public selectedChannel: ChannelType | null = null;
+
+  @Output()
+  public onChannelRename = new EventEmitter();
 
   @Output()
   public onChannelDelete = new EventEmitter();
@@ -69,24 +71,39 @@ export class ChatWindowComponent implements OnChanges {
   public newName: string = '';
 
   private loadMessagesForChannel(channel: ChannelType): void {
-    this.channelMessages = this.messagesApi.getMessagesForChannel(channel);
+    this.messagesApiService.getMessagesForChannel(channel.id).subscribe((response: any) => {
+      this.channelMessages = response.data;
+    });
   }
 
   private loadPossibleUsers(channel: ChannelType): void {
-    this.possibleUsers = this.userApiService.getUsersNotInChannel(channel);
+    this.userApiService.getUsersNotInChannel(channel.id).subscribe((response: any) => {
+      this.possibleUsers = response.data;
+    });
   }
 
   private loadMemberInformation(channel: ChannelType): void {
-    this.channelMembers = this.userApiService.getChannelMemebers(channel);
+    this.channelsApiService.getChannelMembers(channel.id).subscribe((response: any) => {
+      this.channelMembers = response.data;
+    });
   }
 
   private loadAdminInformation(channel: ChannelType): void {
-    this.channelAdmins = this.userApiService.getChannelAdmins(channel);
+    this.channelsApiService.getChannelAdmins(channel.id).subscribe((response: any) => {
+      this.channelAdmins = response.data;
+    });
+  }
+
+  public isCurrentUserAdmin() {
+    if (this.currentUser) {
+      return this.selectedChannel?.admins.some(user => user.id === this.currentUser!.id);
+    }
+    return false;
   }
 
   private toggleDropown(dropdownStateField: string): void {
     const toggleValue = !this.dropdownState[dropdownStateField];
-    for(const k in this.dropdownState) {
+    for (const k in this.dropdownState) {
       this.dropdownState[k] = false;
     }
     this.dropdownState[dropdownStateField] = toggleValue;
@@ -98,10 +115,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleAdminAdd(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.addAdminToChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleAddAdmin();
+    if (this.selectedChannel) {
+      this.channelsApiService.addAdminToChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleAddAdmin();
+      });
     }
   }
 
@@ -111,10 +129,11 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleRemoveAdmin(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.removeAdminFromChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleAdminList();
+    if (this.selectedChannel) {
+      this.channelsApiService.removeAdminFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleAdminList();
+      });
     }
   }
 
@@ -124,10 +143,12 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleChannelRename(): void {
-    if (this.newName !== '' && this.selectedChannel && this.selectedChannel.id) {
-      this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName);
-      this.selectedChannel.channelName = this.newName;
-      this.toggleRenameForm();
+    if (this.newName !== '' && this.selectedChannel) {
+      this.channelsApiService.renameChannel(this.selectedChannel.id, this.newName).subscribe(() => {
+        this.selectedChannel!.name = this.newName;
+        this.toggleRenameForm();
+        this.onChannelRename.emit();
+      });
     }
   }
 
@@ -137,11 +158,12 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleAddUser(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.addMemberToChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadMemberInformation(this.selectedChannel);
-      this.loadPossibleUsers(this.selectedChannel);
-      this.toggleAddUser();
+    if (this.selectedChannel) {
+      this.channelsApiService.addMemberToChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadMemberInformation(this.selectedChannel!);
+        this.loadPossibleUsers(this.selectedChannel!);
+        this.toggleAddUser();
+      });
     }
   }
 
@@ -151,12 +173,13 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleRemoveUser(selectedUser: UserType): void {
-    if (this.selectedChannel && this.selectedChannel.id && selectedUser.id) {
-      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id);
-      this.loadMemberInformation(this.selectedChannel);
-      this.loadPossibleUsers(this.selectedChannel);
-      this.loadAdminInformation(this.selectedChannel);
-      this.toggleUsersList();
+    if (this.selectedChannel && selectedUser.id !== this.selectedChannel.owner.id) {
+      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
+        this.loadMemberInformation(this.selectedChannel!);
+        this.loadPossibleUsers(this.selectedChannel!);
+        this.loadAdminInformation(this.selectedChannel!);
+        this.toggleUsersList();
+      });
     }
   }
 
@@ -165,26 +188,26 @@ export class ChatWindowComponent implements OnChanges {
   }
 
   public handleChannelDelete(): void {
-    if (this.selectedChannel && this.selectedChannel.id) {
-      this.channelsApiService.removeChannel(this.selectedChannel.id);
-      this.onChannelDelete.emit();
-      this.toggleDelete();
+    if (this.selectedChannel) {
+      this.channelsApiService.removeChannel(this.selectedChannel.id).subscribe(() => {
+        this.onChannelDelete.emit();
+        this.toggleDelete();
+      });
     }
   }
 
   public handleMessageSubmit(): void {
     var currentUser = this.userStateService.getCurrentUser()();
-    if (this.currentMessage !== '' && this.selectedChannel?.id && currentUser && currentUser.id) {
-      this.messagesApi.createMessage({
+    if (this.currentMessage !== '' && this.selectedChannel && currentUser) {
+      this.messagesApiService.createMessage({
         channelId: this.selectedChannel.id,
-        sentBy: currentUser.username,
         senderId: currentUser.id,
-        message: this.currentMessage,
+        content: this.currentMessage,
         timestamp: new Date().toLocaleString('en-GB')
+      }).subscribe(() => {
+        this.loadMessagesForChannel(this.selectedChannel!);
+        this.currentMessage = '';
       });
-
-      this.loadMessagesForChannel(this.selectedChannel);
-      this.currentMessage = '';
     };
   }
 }

@@ -1,8 +1,10 @@
+import { UserType } from "./user.model";
+
 export type ChannelType = {
-  id?: number;
-  channelName: string;
-  channelType: string;
-  ownerId: number;
-  adminIds: number[];
-  memberIds: number[];
+  id: number;
+  name: string;
+  type: number;
+  owner: UserType;
+  admins: UserType[];
+  members: UserType[];
 }

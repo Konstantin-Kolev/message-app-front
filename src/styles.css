@@ -80,9 +80,16 @@
   .header-icon {
     @apply text-gray-500
     mr-8 ml-4
-    transition duration-300 ease-in-out 
+    transition duration-150 ease-linear
     hover:text-green-500
     cursor-pointer;
+  }
+
+  .header-tooltip {
+    @apply absolute w-auto p-2 m-2 min-w-max top-14 rounded-md shadow-md
+    text-white bg-gray-900 
+    text-xs font-bold 
+    transition-all duration-100 scale-0 origin-top;
   }
   
   .post {

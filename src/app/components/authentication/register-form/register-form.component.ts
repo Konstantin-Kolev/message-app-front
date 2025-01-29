@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { UserType } from '../../../models/user.model';
 import { UserApiService } from '../../../services/user-api.service';
 import { UserStateService } from '../../../services/user-state.service';
 import { Router } from '@angular/router';
@@ -10,7 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [FormsModule],
   templateUrl: './register-form.component.html',
-  styleUrls: ['./register-form.component.css', '../styles.css']
+  styleUrls: ['../styles.css']
 })
 export class RegisterFormComponent {
 
@@ -26,21 +25,28 @@ export class RegisterFormComponent {
   }
 
   passwordMatchError = false;
+  registerError = false;
+  registerErrorMessage = '';
 
   onSubmit() {
     if (this.register.password !== this.register.passwordConfirm) {
       this.passwordMatchError = true;
       return;
     }
-    const user = this.userApiService.createUser({
+
+    this.userApiService.createUser({
       email: this.register.email,
       password: this.register.password,
       username: this.register.username
-    });
-    this.userStateService.setUser(user);
-
-    this.router.navigateByUrl('');
+    }).subscribe({
+      next: (response: any) => {
+        this.userStateService.setUser(response.data);
+        this.router.navigateByUrl('');
+      },
+      error: (err) => {
+        this.registerError = true;
+        this.registerErrorMessage = err.error.message;
+      }
+    })
   }
-
-
 }

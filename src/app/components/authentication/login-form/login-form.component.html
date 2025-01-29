@@ -8,7 +8,7 @@
                 <form class="login-form" (submit)="onSubmit()">
                     @if(this.loginFailed) {
                         <div class="login-error-message">
-                            <p>Login failed</p>
+                            <p>Email or password is incorrect</p>
                         </div>
                     }
                     @if(email.hasError('required') && (email.dirty || email.touched)) {
