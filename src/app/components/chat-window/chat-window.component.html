@@ -1,13 +1,13 @@
 @if(selectedChannel) {
   <div class="content-container">
     <div class="header">
-      <h3 class="header-title">{{selectedChannel.channelName}}</h3>
-      @if(currentUser && selectedChannel.adminIds.includes(currentUser.id!)) {
+      <h3 class="header-title">{{selectedChannel.name}}</h3>
+      @if(isCurrentUserAdmin()) {
         <fa-icon [icon]="addUserIcon" class="header-icon" (click)="toggleAddUser()"></fa-icon>
         <fa-icon [icon]="usersIcon" class="header-icon" (click)="toggleUsersList()"></fa-icon>
         <fa-icon [icon]="editIcon" class="header-icon" (click)="toggleRenameForm()"></fa-icon>
       }
-      @if(currentUser && selectedChannel.ownerId === currentUser.id) {
+      @if(currentUser && selectedChannel.owner.id === currentUser.id) {
         <fa-icon [icon]="adminIcon" class="header-icon" (click)="toggleAddAdmin()"></fa-icon>
         <fa-icon [icon]="userMinusIcon" class="header-icon" (click)="toggleAdminList()"></fa-icon>
         <fa-icon [icon]="deleteIcon" class="header-icon hover:text-red-700" (click)="toggleDelete()"></fa-icon>
@@ -113,10 +113,10 @@
         <div class="post">
           <div class="post-content">
             <p class="post-owner">
-              {{message.sentBy}}
+              {{message.sender}}
               <small>{{message.timestamp}}</small>
             </p>
-            <p class="post-text">{{message.message}}</p>
+            <p class="post-text">{{message.content}}</p>
           </div>
         </div>
       }

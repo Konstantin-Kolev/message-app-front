@@ -20,7 +20,7 @@ import { ChannelsApiService } from '../../services/channels-api.service';
 })
 export class ChatWindowComponent implements OnChanges {
 
-  constructor(private messagesApi: MessagesApiService,
+  constructor(private messagesApiService: MessagesApiService,
     private userStateService: UserStateService,
     private userApiService: UserApiService,
     private channelsApiService: ChannelsApiService) {
@@ -69,7 +69,9 @@ export class ChatWindowComponent implements OnChanges {
   public newName: string = '';
 
   private loadMessagesForChannel(channel: ChannelType): void {
-    this.channelMessages = this.messagesApi.getMessagesForChannel(channel);
+    this.messagesApiService.getMessagesForChannel(channel.id).subscribe((response: any) => {
+      this.channelMessages = response.data;
+    });
   }
 
   private loadPossibleUsers(channel: ChannelType): void {
@@ -88,6 +90,13 @@ export class ChatWindowComponent implements OnChanges {
     this.channelsApiService.getChannelAdmins(channel.id).subscribe((response: any) => {
       this.channelAdmins = response.data;
     });
+  }
+
+  public isCurrentUserAdmin() {
+    if (this.currentUser) {
+      return this.selectedChannel?.admins.some(user => user.id === this.currentUser!.id);
+    }
+    return false;
   }
 
   private toggleDropown(dropdownStateField: string): void {
@@ -162,7 +171,7 @@ export class ChatWindowComponent implements OnChanges {
 
   public handleRemoveUser(selectedUser: UserType): void {
     if (this.selectedChannel) {
-      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(()=>{
+      this.channelsApiService.removeMemberFromChannel(this.selectedChannel.id, selectedUser.id).subscribe(() => {
         this.loadMemberInformation(this.selectedChannel!);
         this.loadPossibleUsers(this.selectedChannel!);
         this.loadAdminInformation(this.selectedChannel!);
@@ -186,17 +195,16 @@ export class ChatWindowComponent implements OnChanges {
 
   public handleMessageSubmit(): void {
     var currentUser = this.userStateService.getCurrentUser()();
-    if (this.currentMessage !== '' && this.selectedChannel?.id && currentUser && currentUser.id) {
-      this.messagesApi.createMessage({
+    if (this.currentMessage !== '' && this.selectedChannel && currentUser) {
+      this.messagesApiService.createMessage({
         channelId: this.selectedChannel.id,
-        sentBy: currentUser.username,
         senderId: currentUser.id,
-        message: this.currentMessage,
+        content: this.currentMessage,
         timestamp: new Date().toLocaleString('en-GB')
+      }).subscribe(() => {
+        this.loadMessagesForChannel(this.selectedChannel!);
+        this.currentMessage = '';
       });
-
-      this.loadMessagesForChannel(this.selectedChannel);
-      this.currentMessage = '';
     };
   }
 }
